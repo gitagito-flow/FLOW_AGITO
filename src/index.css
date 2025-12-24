@@ -1,0 +1,239 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    --background: 210 50% 98%;
+    --foreground: 222 47% 11%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    /* Electric Indigo */
+    --primary: 255 90% 65%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Vibrant Fuchsia */
+    --secondary: 320 85% 60%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+
+    --accent: 190 90% 50%;
+    --accent-foreground: 222 47% 11%;
+
+    --success: 150 80% 40%;
+    --success-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 255 90% 65%;
+
+    --radius: 1rem;
+
+    /* Glass morphism - More crystalline */
+    --glass-bg: 0 0% 100% / 0.6;
+    --glass-border: 0 0% 100% / 0.4;
+    --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(255 90% 65%) 0%, hsl(320 85% 60%) 100%);
+    --gradient-secondary: linear-gradient(135deg, hsl(190 90% 50%) 0%, hsl(255 90% 65%) 100%);
+    --gradient-background: linear-gradient(135deg, hsl(210 50% 98%) 0%, hsl(230 40% 94%) 50%, hsl(250 30% 90%) 100%);
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5% 26%;
+    --sidebar-primary: 255 90% 65%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 250 20% 96%;
+    --sidebar-accent-foreground: 240 6% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 255 90% 65%;
+
+    --badge-project-type-bg: 260 70% 35%;
+    --badge-project-type-fg: 0 0% 100%;
+  }
+
+  .dark {
+    --background: 230 25% 10%;
+    --foreground: 210 40% 98%;
+
+    --card: 230 25% 12%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 230 25% 12%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 255 85% 65%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 320 80% 60%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 230 20% 20%;
+    --muted-foreground: 215 20% 65%;
+
+    --accent: 190 80% 50%;
+    --accent-foreground: 0 0% 100%;
+
+    --success: 150 60% 45%;
+    --success-foreground: 0 0% 100%;
+
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 230 20% 25%;
+    --input: 230 20% 25%;
+    --ring: 255 85% 65%;
+
+    /* Glass morphism dark */
+    --glass-bg: 230 25% 12% / 0.6;
+    --glass-border: 255 100% 100% / 0.1;
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+
+    /* Gradients dark */
+    --gradient-primary: linear-gradient(135deg, hsl(255 85% 65%) 0%, hsl(320 80% 60%) 100%);
+    --gradient-secondary: linear-gradient(135deg, hsl(190 80% 50%) 0%, hsl(255 85% 65%) 100%);
+    --gradient-background: linear-gradient(135deg, hsl(230 25% 8%) 0%, hsl(240 20% 10%) 50%, hsl(260 20% 12%) 100%);
+
+    --sidebar-background: 230 25% 12%;
+    --sidebar-foreground: 240 5% 96%;
+    --sidebar-primary: 255 85% 65%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 230 20% 20%;
+    --sidebar-accent-foreground: 240 5% 96%;
+    --sidebar-border: 230 20% 20%;
+    --sidebar-ring: 255 85% 65%;
+
+    --badge-project-type-bg: 280 65% 60%;
+    --badge-project-type-fg: 0 0% 100%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    background: var(--gradient-background);
+    background-attachment: fixed;
+    position: relative; /* Needed for pseudo-element positioning */
+    transition: background-color 0.3s ease-in-out, background-image 0.3s ease-in-out; /* Smooth theme transition */
+  }
+
+  /* Grain effect for light mode */
+  body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMjAwIDIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8ZmlsdGVlciBpZD0ibm9pc2VGaWx0ZXIiPgogICAgPGZlVHVyYmVsZW5jZSB0eXBlPSJmcmFjdGFsTm9pc2UiIGJhc2VGcmVxdWVuY3k9IjAuOCIgbnVtT2N0YXZlcz0iMyIgc3RpdGNoVGlsZXM9InN0aXRjaCIvPgogICAgPGZlQ29sb3JNYXRyaXggaW49Im5vaXNlIiB0eXBlPSJzYXR1cmF0ZSIgdmFsdWVzPSIwIi8+CiAgICA8L2ZlQ29tcG9uZW50VHJhbnNmZXJ+CiAgPC9maWx0ZXI+CiAgPHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbHRlciA9InVybCgjbW9pc2VGaWx0ZXIpIi8+Cjwvc3ZnPg==');
+    opacity: 0.05; /* Adjust for desired subtlety */
+    z-index: -1;
+    transition: opacity 0.3s ease-in-out; /* Smooth transition for theme change */
+  }
+
+  .dark body::after {
+    opacity: 0.02; /* Tambahkan efek grain halus di mode gelap */
+  }
+}
+
+@layer utilities {
+  .glass {
+    background: hsla(var(--glass-bg));
+    backdrop-filter: blur(10px) saturate(180%);
+    border: 1px solid hsla(var(--glass-border));
+    box-shadow: var(--glass-shadow);
+  }
+
+  .glass-dark {
+    background: hsla(var(--glass-bg));
+    backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid hsla(var(--glass-border));
+    box-shadow: var(--glass-shadow);
+  }
+
+  /* New utility for gradient buttons with subtle shadow and hover effect */
+  .btn-gradient-effect {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    transition: all 0.2s ease-in-out;
+  }
+
+  .btn-gradient-effect:hover {
+    transform: scale(1.02); /* Slight scale up on hover */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
+  }
+
+  .liquid-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.5;
+    animation: float 20s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translate(0, 0) scale(1);
+    }
+    33% {
+      transform: translate(30px, -50px) scale(1.1);
+    }
+    66% {
+      transform: translate(-20px, 20px) scale(0.9);
+    }
+  }
+
+  .animate-float-slow {
+    animation: float 25s ease-in-out infinite;
+  }
+
+  .animate-float-slower {
+    animation: float 30s ease-in-out infinite;
+  }
+
+  /* Custom Scrollbar Styling */
+  /* For Webkit browsers (Chrome, Safari) */
+  ::-webkit-scrollbar {
+    width: 8px; /* width of the scrollbar */
+    height: 8px; /* height of horizontal scrollbar */
+  }
+
+  ::-webkit-scrollbar-track {
+    background: hsla(var(--glass-bg)); /* background of the scrollbar track */
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--primary)/0.5); /* color of the scrollbar thumb */
+    border-radius: 10px;
+    border: 2px solid hsla(var(--glass-bg)); /* creates a padding around the thumb */
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--primary)); /* color of the scrollbar thumb on hover */
+  }
+
+  /* For Firefox */
+  html {
+    scrollbar-width: thin; /* "auto" or "thin" */
+    scrollbar-color: hsl(var(--primary)/0.5) hsla(var(--glass-bg)); /* thumb color track color */
+  }
+}

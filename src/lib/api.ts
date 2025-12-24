@@ -16,12 +16,12 @@ export interface AuthUser {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mapSupabaseUser = (user: any): AuthUser => ({
-    id: user.id,
-    email: user.email || '',
-    name: user.user_metadata?.name || '',
-    initials: user.user_metadata?.initials || null,
-    role: user.user_metadata?.role || 'member',
-    avatarUrl: user.user_metadata?.avatar_url || null,
+    id: user?.id || '',
+    email: user?.email || '',
+    name: user?.user_metadata?.name || user?.email?.split('@')[0] || 'User',
+    initials: user?.user_metadata?.initials || null,
+    role: user?.user_metadata?.role || 'member',
+    avatarUrl: user?.user_metadata?.avatar_url || null,
 });
 
 export const authApi = {
@@ -29,10 +29,29 @@ export const authApi = {
         const { data: authData, error } = await supabase.auth.signUp({
             email: data.email,
             password: data.password,
-            options: { data: { name: data.name, role: 'member' } }
+            options: { 
+                data: { 
+                    name: data.name, 
+                    role: 'member' 
+                } 
+            }
         });
-        if (error) throw error;
-        return { user: mapSupabaseUser(authData.user), token: authData.session?.access_token };
+
+        if (error) {
+            console.error("Signup error:", error);
+            throw error;
+        }
+
+        if (!authData.user) {
+            throw new Error("Gagal membuat user. Silakan coba lagi.");
+        }
+
+        // Jika email confirmation aktif, session akan null
+        return { 
+            user: mapSupabaseUser(authData.user), 
+            token: authData.session?.access_token,
+            needsConfirmation: !authData.session 
+        };
     },
     login: async (data: { email: string; password: string }) => {
         const { data: authData, error } = await supabase.auth.signInWithPassword({
@@ -82,6 +101,9 @@ export const projectApi = {
             graphicTeams: data.project_teams?.filter((t: any) => t.role === 'graphic').map((t: any) => t.team_id) || [],
             motionTeams: data.project_teams?.filter((t: any) => t.role === 'motion').map((t: any) => t.team_id) || [],
             musicTeams: data.project_teams?.filter((t: any) => t.role === 'music').map((t: any) => t.team_id) || [],
+            tasks: data.tasks || [],
+            concerns: data.concerns || [],
+            comments: data.comments || []
         };
     },
     create: async (p: any) => {
@@ -145,7 +167,7 @@ export const taskApi = {
             image_url: t.imageUrl,
             graphic_link: t.graphicLink,
             animation_link: t.animationLink,
-            music_link: t.musicLink
+            music_link: t.music_link
         }).eq('id', id);
         if (error) throw error;
     },

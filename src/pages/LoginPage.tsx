@@ -28,6 +28,7 @@ import { toast } from "sonner";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { authApi } from "@/lib/api";
 
 const loginSchema = z.object({
     email: z.string().email("Invalid email address"),
@@ -86,9 +87,24 @@ export default function LoginPage() {
     async function onRegister(values: z.infer<typeof registerSchema>) {
         setIsLoading(true);
         try {
-            await register(values.name, values.email, values.password);
-            toast.success("Account created successfully!");
-            navigate(from, { replace: true });
+            // Kita panggil API langsung untuk mendeteksi apakah butuh konfirmasi email
+            const result = await authApi.register({ 
+                name: values.name, 
+                email: values.email, 
+                password: values.password 
+            });
+            
+            if (result.needsConfirmation) {
+                toast.success("Account created! Please check your email to confirm your account before logging in.", {
+                    duration: 10000,
+                });
+                // Tetap di halaman login agar user bisa login setelah konfirmasi
+            } else {
+                // Jika konfirmasi email mati, otomatis login
+                await login(values.email, values.password);
+                toast.success("Account created successfully!");
+                navigate(from, { replace: true });
+            }
         } catch (error: any) {
             toast.error(error.message || "Failed to create account.");
             console.error(error);
@@ -99,12 +115,10 @@ export default function LoginPage() {
 
     return (
         <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
-            {/* Theme Toggle Position */}
             <div className="absolute top-4 right-4 z-20">
                 <ThemeToggle />
             </div>
 
-            {/* Background Elements */}
             <div className="liquid-blob top-20 left-20 w-64 h-64 bg-primary/30 mix-blend-multiply filter blur-xl opacity-70 animate-float-slow" />
             <div className="liquid-blob bottom-20 right-20 w-64 h-64 bg-secondary/30 mix-blend-multiply filter blur-xl opacity-70 animate-float-slower" />
 

@@ -3,15 +3,14 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { graphicTeams, motionTeams, musicTeam } from "@/lib/teams";
-import { ProjectType, Project } from "@/lib/types";
+import { ProjectType } from "@/lib/types";
 import { projectApi } from "@/lib/api";
 import { toast } from "sonner";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { DatePicker } from "@/components/ui/date-picker";
-import { TeamSelectionButton } from "./TeamSelectionButton"; // Import komponen baru
+import { TeamSelectionButton } from "./TeamSelectionButton";
 
 interface CreateProjectDialogProps {
   open: boolean;
@@ -36,7 +35,6 @@ export function CreateProjectDialog({ open, onOpenChange, onProjectCreated }: Cr
     graphicTeams: [] as string[],
     motionTeams: [] as string[],
     musicTeams: [] as string[],
-    backgroundUrl: "",
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -81,7 +79,6 @@ export function CreateProjectDialog({ open, onOpenChange, onProjectCreated }: Cr
       graphicTeams: [],
       motionTeams: [],
       musicTeams: [],
-      backgroundUrl: "",
     });
   };
 
@@ -142,7 +139,6 @@ export function CreateProjectDialog({ open, onOpenChange, onProjectCreated }: Cr
               </div>
             </div>
 
-            {/* Event Start Date and End Date */}
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="eventStartDate">Event Start Date *</Label>
@@ -298,18 +294,6 @@ export function CreateProjectDialog({ open, onOpenChange, onProjectCreated }: Cr
                   />
                 </div>
               </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="backgroundUrl">Background Image URL</Label>
-              <Input
-                id="backgroundUrl"
-                type="url"
-                value={formData.backgroundUrl}
-                onChange={(e) => setFormData({ ...formData, backgroundUrl: e.target.value })}
-                className="glass"
-                placeholder="https://"
-              />
             </div>
 
             <div className="flex gap-3 pt-4">

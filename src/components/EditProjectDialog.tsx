@@ -3,14 +3,13 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Project, ProjectType } from "@/lib/types";
 import { graphicTeams, motionTeams, musicTeam } from "@/lib/teams";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { toast } from "sonner";
 import { DatePicker } from "@/components/ui/date-picker";
-import { TeamSelectionButton } from "./TeamSelectionButton"; // Import komponen baru
+import { TeamSelectionButton } from "./TeamSelectionButton";
 
 interface EditProjectDialogProps {
   project: Project | null;
@@ -25,12 +24,12 @@ export function EditProjectDialog({ project, open, onOpenChange, onProjectUpdate
   useEffect(() => {
     if (project) {
       const initialStartDate = project.eventStartDate ? new Date(project.eventStartDate) : undefined;
-      const initialEndDate = project.eventEndDate ? new Date(project.eventEndDate) : (project as any).deadline ? new Date((project as any).deadline) : undefined;
+      const initialEndDate = project.eventEndDate ? new Date(project.eventEndDate) : undefined;
 
       setFormData({
         ...project,
-        eventStartDate: initialStartDate,
-        eventEndDate: initialEndDate,
+        eventStartDate: initialStartDate as any,
+        eventEndDate: initialEndDate as any,
       });
     }
   }, [project]);
@@ -39,12 +38,7 @@ export function EditProjectDialog({ project, open, onOpenChange, onProjectUpdate
     e.preventDefault();
 
     if (!project || !formData.title || !formData.type || !formData.eventStartDate || !formData.eventEndDate) {
-      toast.error("Please fill in all required fields: Project Title, Project Type, Event Start Date, and Event End Date.");
-      return;
-    }
-
-    if (formData.eventStartDate > formData.eventEndDate) {
-      toast.error("Event Start Date cannot be after Event End Date.");
+      toast.error("Please fill in all required fields.");
       return;
     }
 
@@ -54,8 +48,8 @@ export function EditProjectDialog({ project, open, onOpenChange, onProjectUpdate
       type: formData.type as ProjectType,
       eventTeamName: formData.eventTeamName || "",
       brief: formData.brief || "",
-      eventStartDate: formData.eventStartDate.toISOString(),
-      eventEndDate: formData.eventEndDate.toISOString(),
+      eventStartDate: new Date(formData.eventStartDate as any).toISOString(),
+      eventEndDate: new Date(formData.eventEndDate as any).toISOString(),
       deckLink: formData.deckLink || "",
       graphicAssetsLink: formData.graphicAssetsLink || "",
       threeDAssetsLink: formData.threeDAssetsLink || "",
@@ -65,12 +59,10 @@ export function EditProjectDialog({ project, open, onOpenChange, onProjectUpdate
       graphicTeams: formData.graphicTeams || [],
       motionTeams: formData.motionTeams || [],
       musicTeams: formData.musicTeams || [],
-      backgroundUrl: formData.backgroundUrl || "",
     };
 
     onProjectUpdate(updatedProject);
     onOpenChange(false);
-    toast.success("Project updated successfully");
   };
 
   const toggleTeam = (teamId: string, category: "graphic" | "motion" | "music") => {
@@ -120,13 +112,12 @@ export function EditProjectDialog({ project, open, onOpenChange, onProjectUpdate
               </Select>
             </div>
 
-            {/* Event Start Date and End Date */}
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="eventStartDate">Event Start Date *</Label>
                 <DatePicker
-                  date={formData.eventStartDate instanceof Date ? formData.eventStartDate : (formData.eventStartDate ? new Date(formData.eventStartDate) : undefined)}
-                  setDate={(date) => setFormData({ ...formData, eventStartDate: date || undefined })}
+                  date={formData.eventStartDate as any}
+                  setDate={(date) => setFormData({ ...formData, eventStartDate: date as any })}
                   placeholder="Select start date"
                   className="glass"
                 />
@@ -135,8 +126,8 @@ export function EditProjectDialog({ project, open, onOpenChange, onProjectUpdate
               <div className="space-y-2">
                 <Label htmlFor="eventEndDate">Event End Date *</Label>
                 <DatePicker
-                  date={formData.eventEndDate instanceof Date ? formData.eventEndDate : (formData.eventEndDate ? new Date(formData.eventEndDate) : undefined)}
-                  setDate={(date) => setFormData({ ...formData, eventEndDate: date || undefined })}
+                  date={formData.eventEndDate as any}
+                  setDate={(date) => setFormData({ ...formData, eventEndDate: date as any })}
                   placeholder="Select end date"
                   className="glass"
                 />
@@ -286,25 +277,6 @@ export function EditProjectDialog({ project, open, onOpenChange, onProjectUpdate
                   category="music"
                 />
               </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="backgroundUrl">Background Image URL</Label>
-              <Input
-                id="backgroundUrl"
-                type="url"
-                value={formData.backgroundUrl || ""}
-                onChange={(e) => setFormData({ ...formData, backgroundUrl: e.target.value })}
-                className="glass"
-                placeholder="https://"
-              />
-              {formData.backgroundUrl && (
-                <img
-                  src={formData.backgroundUrl}
-                  alt="Background preview"
-                  className="w-full h-32 object-cover rounded-lg glass mt-2"
-                />
-              )}
             </div>
           </form>
         </ScrollArea>

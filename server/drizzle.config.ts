@@ -1,10 +1,11 @@
 import { defineConfig } from "drizzle-kit";
+import "dotenv/config"; // Import dotenv to load environment variables
 
 export default defineConfig({
     schema: "./src/db/schema.ts",
     out: "./drizzle",
     dialect: "postgresql",
     dbCredentials: {
-        url: "postgresql://postgres.bodfzmcibtogbpeybxyr:%25mUGq6Cn%2AC%2FV%236F@aws-1-ap-northeast-2.pooler.supabase.com:6543/postgres",
+        url: process.env.DATABASE_URL!, // Use environment variable
     },
 });

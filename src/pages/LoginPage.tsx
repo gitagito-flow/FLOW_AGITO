@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -25,6 +27,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Loader2 } from "lucide-react";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const loginSchema = z.object({
     email: z.string().email("Invalid email address"),
@@ -95,13 +98,25 @@ export default function LoginPage() {
     }
 
     return (
-        <div className="min-h-screen flex items-center justify-center p-4">
+        <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+            {/* Theme Toggle Position */}
+            <div className="absolute top-4 right-4 z-20">
+                <ThemeToggle />
+            </div>
+
             {/* Background Elements */}
             <div className="liquid-blob top-20 left-20 w-64 h-64 bg-primary/30 mix-blend-multiply filter blur-xl opacity-70 animate-float-slow" />
             <div className="liquid-blob bottom-20 right-20 w-64 h-64 bg-secondary/30 mix-blend-multiply filter blur-xl opacity-70 animate-float-slower" />
 
             <Card className="w-full max-w-md glass-dark border-opacity-20 shadow-xl z-10">
                 <CardHeader className="space-y-1 text-center">
+                    <div className="flex justify-center mb-4">
+                        <img 
+                            src="/logo-polos.png" 
+                            alt="Flow Logo" 
+                            className="h-24 w-auto object-contain animate-fade-in"
+                        />
+                    </div>
                     <CardTitle className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
                         Flow
                     </CardTitle>
